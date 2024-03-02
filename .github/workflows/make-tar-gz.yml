@@ -14,10 +14,10 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Criar arquivo .tar.gz
-      run: tar -czf arquivos.tar.gz .
+      run: tar -czf void-wallpapers-xfce.tar.gz .
 
     - name: Salvar arquivo .tar.gz como artefato
       uses: actions/upload-artifact@v2
       with:
         name: arquivos
-        path: arquivos.tar.gz
+        path: void-wallpapers-xfce.tar.gz
