@@ -32,7 +32,7 @@ jobs:
         release_name: Release v1.0.0  # ajuste conforme necessário
         body: |
           Descrição do release aqui.
-        draft: true
+        draft: false
         prerelease: false
 
     - name: Fazer upload do arquivo .tar.gz no release
