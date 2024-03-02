@@ -14,19 +14,19 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Criar arquivo .tar.gz
-      run: tar -cf arquivo.tar.gz .
+      run: tar -cf void-xfce-skel.tar.gz .
 
     - name: Salvar arquivo .tar.gz como artefato
       uses: actions/upload-artifact@v2
       with:
         name: arquivos
-        path: arquivo.tar.gz
+        path: void-xfce-skel.tar.gz
 
     - name: Criar release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         tag_name: v1.0.0  # ajuste conforme necessário
         release_name: Release v1.0.0  # ajuste conforme necessário
@@ -39,10 +39,10 @@ jobs:
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./arquivo.tar.gz
-        asset_name: arquivo.tar.gz
+        asset_path: ./void-xfce-skel.tar.gz
+        asset_name: void-xfce-skel.tar.gz
         asset_content_type: application/gzip
 
