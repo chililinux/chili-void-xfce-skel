@@ -1,5 +1,5 @@
 # Template file for 'void-xfce-skel'
-pkgname=void-skel-xfce
+pkgname=void-xfce-skel
 version=1.0.0
 revision=1
 noarch=true
