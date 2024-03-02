@@ -11,13 +11,13 @@ jobs:
 
     steps:
     - name: Checkout do código
-      uses: actions/checkout@v1
+      uses: actions/checkout@v1.1
 
     - name: Criar arquivo .tar.gz
       run: tar -cf arquivos.tar.gz .
 
     - name: Salvar arquivo .tar.gz como artefato
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v1.1
       with:
         name: arquivos
         path: arquivos.tar.gz
