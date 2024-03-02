@@ -1,0 +1,23 @@
+name: Criar arquivo .tar.gz
+
+on:
+  push:
+    branches:
+      - main  # ajuste conforme necessário
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v2
+
+    - name: Criar arquivo .tar.gz
+      run: tar -czf arquivos.tar.gz .
+
+    - name: Salvar arquivo .tar.gz como artefato
+      uses: actions/upload-artifact@v2
+      with:
+        name: arquivos
+        path: arquivos.tar.gz
