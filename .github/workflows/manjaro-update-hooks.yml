@@ -1,4 +1,4 @@
-name: BigLinux Update ISO
+name: Update ISO
 
 # Controls when the workflow will run
 on:
