@@ -1,7 +1,7 @@
 # Maintainer: Vilmar Catafesta <vcatafesta@gmail.com>
 
-pkgname=void-wallpapers-xfce
-pkgdesc="Set of wallpapers for XFCE"
+pkgname=void-xfce-skel
+pkgdesc="Skel for Void XFCE"
 # depends=('')
 # makedepends=('')
 # conflicts=('')
