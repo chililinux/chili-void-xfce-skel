@@ -1,1 +1,1 @@
-# void-wallpapers-xfce
+# chili-void-xfce-skel
