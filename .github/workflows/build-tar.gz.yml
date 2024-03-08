@@ -27,7 +27,7 @@ jobs:
       run: |
         response_code=$(curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: Bearer ${{ secrets.ORGANIZATION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/v1.0.0")
         if [ "$response_code" -eq "200" ]; then
-          curl -X DELETE -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/v1.0.0"
+          curl -X DELETE -H "Authorization: Bearer ${{ secrets.ORGANIZATION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/v1.0.0"
         fi
 
     - name: Criar release
