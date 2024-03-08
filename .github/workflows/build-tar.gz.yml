@@ -31,7 +31,6 @@ jobs:
         fi
 
     - name: Criar release
-      if: ${{ steps.check_and_delete_release.outputs.response_code }} != '200'
       id: create_release
       uses: actions/create-release@v1
       env:
