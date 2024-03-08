@@ -22,7 +22,6 @@ do_fetch() {
 }
 
 do_install() {
-	vcopy boot /
 	vcopy etc /
 	vcopy usr /
 }
