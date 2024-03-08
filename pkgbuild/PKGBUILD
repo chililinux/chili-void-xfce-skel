@@ -1,6 +1,6 @@
 # Maintainer: Vilmar Catafesta <vcatafesta@gmail.com>
 
-pkgname=void-xfce-skel
+pkgname=chili-void-xfce-skel
 pkgdesc="Skel for Void XFCE"
 # depends=('')
 # makedepends=('')
