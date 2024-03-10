@@ -1,56 +1,79 @@
 name: Criar release e arquivo .tar.gz
 
+env:
+  PACKAGE_NAME: chili-void-xfce-skel.tar.gz
+
+# Gatilhos para o workflow
 on:
   push:
     branches:
       - main
 
+  workflow_dispatch:  # Permite a execução manual do workflow
+    inputs:
+      debug_enabled:  # Input para habilitar o modo de depuração
+        type: boolean
+        description: 'With TMATE'
+        required: false
+        default: false
+
+  schedule:  # Executa automaticamente toda sexta-feira às 05:00
+    - cron: '0 5 * * 5'
+
+  repository_dispatch:  # Permite a execução através de eventos de webhook
+    types:
+      - webhook
+      - '**'
+
+# Jobs do workflow
 jobs:
-  build:
+  # Job para obter a hora atual
+  get-time:
     runs-on: ubuntu-latest
-
+    outputs:
+      time: ${{ steps.time.outputs.time }}  # Saída do job
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v2
+      - name: Obter a hora atual
+        id: time
+        run: echo "::set-output name=time::$(date +'%Y.%m.%d-%H%M')"
 
-    - name: Criar arquivo .tar.gz
-      run: tar -cf chili-void-xfce-skel.tar.gz .
+  # Job para preparar a release
+  prepare-release:
+    runs-on: ubuntu-20.04  # Define a máquina virtual a ser usada
+    needs: [get-time]  # Depende do job get-time para obter a hora atual
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
 
-    - name: Salvar arquivo .tar.gz como artefato
-      uses: actions/upload-artifact@v2
-      with:
-        name: arquivos
-        path: chili-void-xfce-skel.tar.gz
+      - name: Criar arquivo .tar.gz
+        run: tar -cf $PACKAGE_NAME .
 
-    - name: Verificar e excluir release existente
-      id: check_and_delete_release
-      run: |
-        response_code=$(curl -s -o /dev/null -w "%{http_code}" -X GET -H "Authorization: Bearer ${{ secrets.ORGANIZATION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/v1.0.0")
-        if [ "$response_code" -eq "200" ]; then
-          curl -X DELETE -H "Authorization: Bearer ${{ secrets.ORGANIZATION_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/v1.0.0"
-        fi
+      - name: Salvar arquivo .tar.gz como artefato
+        uses: actions/upload-artifact@v2
+        with:
+          name: arquivos
+          path: $PACKAGE_NAME
 
-    - name: Criar release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.ORGANIZATION_TOKEN }}
-      with:
-        tag_name: v1.0.0-$(date +"%Y%m%d%H%M%S")
-        release_name: Release v1.0.0
-        body: |
-          Descrição do release aqui.
-        draft: false
-        prerelease: false
+      - name: Criar release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORGANIZATION_TOKEN }}
+        with:
+          tag_name: ${{ needs.get-time.outputs.time }}
+          release_name: Release ${{ needs.get-time.outputs.time }}
+          body: |
+            Descrição do release aqui.
+          draft: false
+          prerelease: false
 
-    - name: Fazer upload do arquivo .tar.gz no release
-      if: ${{ steps.check_and_delete_release.outputs.response_code }} != '200'
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.ORGANIZATION_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./chili-void-xfce-skel.tar.gz
-        asset_name: chili-void-xfce-skel.tar.gz
-        asset_content_type: application/gzip
+      - name: Fazer upload do arquivo .tar.gz no release
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ORGANIZATION_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.PACKAGE_NAME }}  # Correção aqui
+          asset_name: ${{ env.PACKAGE_NAME }}
+          asset_content_type: application/gzip
